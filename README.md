@@ -1,6 +1,8 @@
-# ReachInbox — Email Job Scheduler
+# ReachInbox ï¿½ Email Job Scheduler
 
 > A full-stack email scheduling platform with Google OAuth, BullMQ queues, rate limiting, Elasticsearch search, and Slack notifications.
+
+Demo link of the project - https://drive.google.com/file/d/1FEygo9kks32iGlItrL2GBIrSaBbRn6dB/view?usp=sharing
 
 ---
 
@@ -154,7 +156,7 @@ npm start
 
 ## Ethereal Email Setup
 
-[Ethereal](https://ethereal.email/) is a **fake SMTP service** for testing — emails are captured but never delivered to real inboxes. No account creation is needed; the backend generates test accounts automatically.
+[Ethereal](https://ethereal.email/) is a **fake SMTP service** for testing ï¿½ emails are captured but never delivered to real inboxes. No account creation is needed; the backend generates test accounts automatically.
 
 ### How It Works
 
@@ -169,7 +171,7 @@ npm start
 
 ### No Extra Environment Variables Needed
 
-Ethereal accounts are auto-generated — you do not need to set any SMTP env vars manually. The account credentials are persisted in the database per sender.
+Ethereal accounts are auto-generated ï¿½ you do not need to set any SMTP env vars manually. The account credentials are persisted in the database per sender.
 
 ---
 
@@ -190,18 +192,18 @@ cp backend/.env.example backend/.env
 | `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/reachinbox` | **Yes** | PostgreSQL connection string |
 | `REDIS_HOST` | `localhost` | No | Redis hostname |
 | `REDIS_PORT` | `6379` | No | Redis port |
-| `GOOGLE_CLIENT_ID` | — | **Yes** | Google OAuth Client ID |
-| `GOOGLE_CLIENT_SECRET` | — | **Yes** | Google OAuth Client Secret |
+| `GOOGLE_CLIENT_ID` | ï¿½ | **Yes** | Google OAuth Client ID |
+| `GOOGLE_CLIENT_SECRET` | ï¿½ | **Yes** | Google OAuth Client Secret |
 | `GOOGLE_CALLBACK_URL` | `http://localhost:3001/auth/google/callback` | No | OAuth redirect URI |
-| `SESSION_SECRET` | — | **Yes** | Random string for session signing |
+| `SESSION_SECRET` | ï¿½ | **Yes** | Random string for session signing |
 | `FRONTEND_URL` | `http://localhost:3000` | No | CORS origin + OAuth redirect |
 | `ELASTICSEARCH_URL` | `http://localhost:9200` | No | Elasticsearch endpoint |
 | `WORKER_CONCURRENCY` | `5` | No | Number of concurrent BullMQ workers |
 | `MIN_SEND_DELAY_MS` | `2000` | No | Min ms between email sends (global throttle) |
 | `MAX_EMAILS_PER_HOUR` | `200` | No | Global hourly limit across all senders |
 | `MAX_EMAILS_PER_HOUR_PER_SENDER` | `50` | No | Per-sender hourly limit |
-| `SLACK_CLIENT_ID` | — | No | Slack app Client ID (optional) |
-| `SLACK_CLIENT_SECRET` | — | No | Slack app Client Secret (optional) |
+| `SLACK_CLIENT_ID` | ï¿½ | No | Slack app Client ID (optional) |
+| `SLACK_CLIENT_SECRET` | ï¿½ | No | Slack app Client Secret (optional) |
 | `SLACK_REDIRECT_URI` | `http://localhost:3001/slack/callback` | No | Slack OAuth redirect URI |
 
 #### Getting Google OAuth Credentials
@@ -380,6 +382,6 @@ Up to 5 jobs can be **processed in parallel** (rate-limit checks, DB writes, etc
 | **Slack Integration** | `src/app/dashboard/page.tsx` | Connect/disconnect Slack from sidebar |
 | **Auto-refresh** | `src/app/dashboard/page.tsx` | Polls every 15 seconds; manual refresh button |
 | **Bull-Board Link** | `src/app/dashboard/page.tsx` | Direct link to `/admin/queues` in the topbar |
-| **Resilient Fetching** | `src/app/dashboard/page.tsx` | `Promise.allSettled` — partial API failures don't crash the UI |
+| **Resilient Fetching** | `src/app/dashboard/page.tsx` | `Promise.allSettled` ï¿½ partial API failures don't crash the UI |
 | **Toast Notifications** | Throughout | `react-hot-toast` for success/error feedback |
 | **API Layer** | `src/lib/api.ts` | Typed Axios client with `withCredentials` for cookie sessions |
