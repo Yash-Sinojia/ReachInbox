@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { createClient } from 'redis';
 import { RedisStore } from 'connect-redis';
 import dotenv from 'dotenv';
+import { redisConnection } from './config/redis';
 
 // BullBoard imports for live queue dashboard
 import { createBullBoard } from '@bull-board/api';
@@ -26,11 +27,25 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+
+// Trust Railway/Vercel reverse proxy so secure cookies work in production
+app.set('trust proxy', 1);
+
+// FRONTEND_URL can be a comma-separated list for multi-origin support:
+// e.g. "https://reachinbox.vercel.app,http://localhost:3000"
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
 
 // ── Middleware ─────────────────────────────────────────────────────────────
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, Postman, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -38,13 +53,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ── Session with Redis store ───────────────────────────────────────────────
-// Redis-backed sessions survive server restarts
-const redisClient = createClient({
-  socket: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT || '6379'),
-  },
-});
+// Use the same connection config as ioredis/BullMQ — supports REDIS_URL
+const redisUrlForSession = process.env.REDIS_URL || process.env.REDIS_PRIVATE_URL ||
+  `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || '6379'}`;
+
+const redisClient = createClient({ url: redisUrlForSession });
 redisClient.connect().catch(console.error);
 
 const redisStore = new RedisStore({
